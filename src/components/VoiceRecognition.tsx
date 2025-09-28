@@ -140,11 +140,17 @@ const VoiceRecognition: React.FC = () => {
   const stopListening = useCallback(() => {
     if (!recognitionRef.current) return;
 
-    recognitionRef.current.stop();
-    toast({
-      title: "Listening Stopped",
-      description: "Speech recognition has been stopped.",
-    });
+    try {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      toast({
+        title: "Listening Stopped",
+        description: "Speech recognition has been stopped.",
+      });
+    } catch (error) {
+      console.error("Error stopping recognition:", error);
+      setIsListening(false);
+    }
   }, [toast]);
 
   if (!isSupported) {
@@ -176,34 +182,34 @@ const VoiceRecognition: React.FC = () => {
           Telugu Meme Chat
         </h1>
 
-        {/* Main microphone button with Gemini-style animation */}
+        {/* Main microphone button with cosmic particle animation */}
         <div className="relative">
-          {/* Breathing glow background */}
-          {isListening && <div className="breathing-glow" style={{ width: '400px', height: '400px' }} />}
-          
-          {/* Gemini-style voice waves */}
+          {/* Cosmic particle field */}
           {isListening && (
-            <div className="gemini-voice-animation">
-              <div className="voice-wave"></div>
-              <div className="voice-wave"></div>
-              <div className="voice-wave"></div>
-              <div className="voice-wave"></div>
-              <div className="voice-wave"></div>
-            </div>
-          )}
-          
-          {/* Spectrum bars inside microphone when active */}
-          {isListening && (
-            <div className="voice-spectrum">
-              <div className="spectrum-bar"></div>
-              <div className="spectrum-bar"></div>
-              <div className="spectrum-bar"></div>
-              <div className="spectrum-bar"></div>
-              <div className="spectrum-bar"></div>
-              <div className="spectrum-bar"></div>
-              <div className="spectrum-bar"></div>
-              <div className="spectrum-bar"></div>
-              <div className="spectrum-bar"></div>
+            <div className="cosmic-listening-field">
+              {/* Generate 40 floating particles */}
+              {Array.from({ length: 40 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="cosmic-particle"
+                  style={{
+                    '--delay': `${i * 0.1}s`,
+                    '--rotation': `${i * 9}deg`,
+                    '--orbit-size': `${120 + (i % 5) * 40}px`,
+                    '--z-depth': `${(i % 3) + 1}`,
+                  } as React.CSSProperties}
+                />
+              ))}
+              
+              {/* Sound wave ripples */}
+              <div className="sound-ripples">
+                <div className="ripple"></div>
+                <div className="ripple"></div>
+                <div className="ripple"></div>
+              </div>
+              
+              {/* Central energy core */}
+              <div className="energy-core"></div>
             </div>
           )}
           

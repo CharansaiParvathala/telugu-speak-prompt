@@ -119,7 +119,7 @@
 /* Voice UI Animations */
 @layer components {
   .voice-button {
-    @apply relative flex items-center justify-center rounded-full transition-all duration-300;
+    @apply relative flex items-center justify-center rounded-full transition-all duration-300 z-10;
     @apply bg-gradient-to-br from-primary to-accent;
     @apply shadow-[0_8px_32px_hsl(var(--voice-glow))];
     @apply hover:scale-105 active:scale-95;
@@ -128,11 +128,9 @@
   }
 
   .voice-button.active {
-    @apply animate-pulse;
     width: var(--voice-size-active);
     height: var(--voice-size-active);
-    box-shadow: 0 0 0 0 hsl(var(--voice-pulse));
-    animation: voice-pulse 2s infinite, gentle-bounce 3s ease-in-out infinite;
+    box-shadow: 0 0 60px hsl(var(--voice-pulse) / 0.6);
   }
 
   .voice-icon {
@@ -144,70 +142,85 @@
     @apply scale-110;
   }
 
-  .gemini-voice-animation {
+  /* Cosmic Particle Animation System */
+  .cosmic-listening-field {
+    @apply absolute inset-0 pointer-events-none;
+    width: 500px;
+    height: 500px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .cosmic-particle {
+    @apply absolute w-2 h-2 rounded-full;
+    background: linear-gradient(45deg, 
+      hsl(180, 100%, 70%), 
+      hsl(270, 100%, 70%), 
+      hsl(320, 100%, 70%)
+    );
+    box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+    animation: 
+      cosmic-orbit calc(8s + var(--delay)) linear infinite,
+      cosmic-pulse calc(2s + var(--delay)) ease-in-out infinite alternate,
+      cosmic-depth calc(4s + var(--delay)) ease-in-out infinite;
+    
+    left: 50%;
+    top: 50%;
+    transform-origin: 0 0;
+    opacity: 0.8;
+  }
+
+  .cosmic-particle::before {
+    content: '';
+    @apply absolute inset-0 rounded-full;
+    background: inherit;
+    filter: blur(8px);
+    transform: scale(1.5);
+    opacity: 0.6;
+  }
+
+  .sound-ripples {
     @apply absolute inset-0 flex items-center justify-center;
-    pointer-events: none;
   }
 
-  .voice-wave {
-    @apply absolute rounded-full border border-primary/20;
-    animation: voice-ripple 3s ease-out infinite;
+  .ripple {
+    @apply absolute rounded-full border-2;
+    border-color: hsl(180, 100%, 70% / 0.3);
+    animation: sound-wave-ripple 2s ease-out infinite;
   }
 
-  .voice-wave:nth-child(1) {
-    width: 140px;
-    height: 140px;
+  .ripple:nth-child(1) {
+    width: 200px;
+    height: 200px;
     animation-delay: 0s;
   }
 
-  .voice-wave:nth-child(2) {
-    width: 180px;
-    height: 180px;
-    animation-delay: 0.5s;
-  }
-
-  .voice-wave:nth-child(3) {
-    width: 220px;
-    height: 220px;
-    animation-delay: 1s;
-  }
-
-  .voice-wave:nth-child(4) {
-    width: 260px;
-    height: 260px;
-    animation-delay: 1.5s;
-  }
-
-  .voice-wave:nth-child(5) {
+  .ripple:nth-child(2) {
     width: 300px;
     height: 300px;
-    animation-delay: 2s;
+    animation-delay: 0.7s;
   }
 
-  .voice-spectrum {
-    @apply absolute inset-0 flex items-center justify-center;
+  .ripple:nth-child(3) {
+    width: 400px;
+    height: 400px;
+    animation-delay: 1.4s;
   }
 
-  .spectrum-bar {
-    @apply bg-gradient-to-t from-primary to-accent rounded-full mx-0.5;
-    width: 3px;
-    animation: spectrum-bounce 1.5s ease-in-out infinite alternate;
-  }
-
-  .spectrum-bar:nth-child(1) { animation-delay: 0s; height: 20px; }
-  .spectrum-bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
-  .spectrum-bar:nth-child(3) { animation-delay: 0.2s; height: 45px; }
-  .spectrum-bar:nth-child(4) { animation-delay: 0.3s; height: 30px; }
-  .spectrum-bar:nth-child(5) { animation-delay: 0.4s; height: 50px; }
-  .spectrum-bar:nth-child(6) { animation-delay: 0.3s; height: 30px; }
-  .spectrum-bar:nth-child(7) { animation-delay: 0.2s; height: 45px; }
-  .spectrum-bar:nth-child(8) { animation-delay: 0.1s; height: 35px; }
-  .spectrum-bar:nth-child(9) { animation-delay: 0s; height: 20px; }
-
-  .breathing-glow {
-    @apply absolute inset-0 rounded-full;
-    background: radial-gradient(circle, hsl(var(--primary) / 0.1) 0%, transparent 70%);
-    animation: breathing-pulse 4s ease-in-out infinite;
+  .energy-core {
+    @apply absolute left-1/2 top-1/2 w-4 h-4 rounded-full;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, 
+      hsl(180, 100%, 80%) 0%, 
+      hsl(270, 100%, 80%) 50%, 
+      transparent 100%
+    );
+    animation: energy-pulse 3s ease-in-out infinite;
+    box-shadow: 
+      0 0 20px hsl(180, 100%, 70%),
+      0 0 40px hsl(270, 100%, 70%),
+      0 0 60px hsl(320, 100%, 70%);
   }
 
   .theme-toggle {
@@ -238,51 +251,62 @@
   }
 }
 
-@keyframes voice-ripple {
+@keyframes cosmic-orbit {
+  0% {
+    transform: rotate(var(--rotation)) translateX(var(--orbit-size)) rotate(calc(-1 * var(--rotation)));
+  }
+  100% {
+    transform: rotate(calc(var(--rotation) + 360deg)) translateX(var(--orbit-size)) rotate(calc(-1 * (var(--rotation) + 360deg)));
+  }
+}
+
+@keyframes cosmic-pulse {
   0% {
     transform: scale(0.8);
-    opacity: 1;
-    border-width: 2px;
-  }
-  50% {
-    opacity: 0.3;
-    border-width: 1px;
+    opacity: 0.6;
+    filter: brightness(0.8);
   }
   100% {
     transform: scale(1.2);
+    opacity: 1;
+    filter: brightness(1.5);
+  }
+}
+
+@keyframes cosmic-depth {
+  0%, 100% {
+    transform: translateZ(0) scale(calc(0.5 + var(--z-depth) * 0.2));
+  }
+  50% {
+    transform: translateZ(20px) scale(calc(0.7 + var(--z-depth) * 0.3));
+  }
+}
+
+@keyframes sound-wave-ripple {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+    border-width: 3px;
+  }
+  50% {
+    opacity: 0.4;
+    border-width: 2px;
+  }
+  100% {
+    transform: scale(1.5);
     opacity: 0;
     border-width: 0px;
   }
 }
 
-@keyframes spectrum-bounce {
-  0% {
-    transform: scaleY(0.3);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scaleY(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes breathing-pulse {
+@keyframes energy-pulse {
   0%, 100% {
-    transform: scale(1);
-    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
   }
   50% {
-    transform: scale(1.1);
-    opacity: 0.1;
-  }
-}
-
-@keyframes gentle-bounce {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-4px);
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.4;
   }
 }
 
