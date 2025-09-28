@@ -171,14 +171,40 @@ const VoiceRecognition: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent" />
       
       <div className="relative z-10 flex flex-col items-center">
-        {/* Main microphone button */}
-        <div className="relative mb-8">
+        {/* App Title */}
+        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-16">
+          Telugu Meme Chat
+        </h1>
+
+        {/* Main microphone button with Gemini-style animation */}
+        <div className="relative">
+          {/* Breathing glow background */}
+          {isListening && <div className="breathing-glow" style={{ width: '400px', height: '400px' }} />}
+          
+          {/* Gemini-style voice waves */}
           {isListening && (
-            <>
-              <div className="pulse-rings" />
-              <div className="pulse-rings" style={{ animationDelay: "0.5s" }} />
-              <div className="pulse-rings" style={{ animationDelay: "1s" }} />
-            </>
+            <div className="gemini-voice-animation">
+              <div className="voice-wave"></div>
+              <div className="voice-wave"></div>
+              <div className="voice-wave"></div>
+              <div className="voice-wave"></div>
+              <div className="voice-wave"></div>
+            </div>
+          )}
+          
+          {/* Spectrum bars inside microphone when active */}
+          {isListening && (
+            <div className="voice-spectrum">
+              <div className="spectrum-bar"></div>
+              <div className="spectrum-bar"></div>
+              <div className="spectrum-bar"></div>
+              <div className="spectrum-bar"></div>
+              <div className="spectrum-bar"></div>
+              <div className="spectrum-bar"></div>
+              <div className="spectrum-bar"></div>
+              <div className="spectrum-bar"></div>
+              <div className="spectrum-bar"></div>
+            </div>
           )}
           
           <button
@@ -191,42 +217,16 @@ const VoiceRecognition: React.FC = () => {
           </button>
         </div>
 
-        {/* Status text */}
-        <div className="text-center mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-            Telugu Voice Recognition
-          </h1>
-          <p className="text-muted-foreground max-w-md">
-            {isListening 
-              ? "Listening for Telugu speech... Check the console for transcriptions."
-              : "Click the microphone to start speaking in Telugu"
-            }
-          </p>
-        </div>
-
         {/* Stop button (only visible when recording) */}
         {isListening && (
           <button
             onClick={stopListening}
-            className="stop-button animate-fade-in"
+            className="stop-button animate-fade-in mt-16"
           >
             <Square className="h-4 w-4 mr-2" />
             Stop Recording
           </button>
         )}
-
-        {/* Instructions */}
-        <div className="mt-8 text-center max-w-lg">
-          <div className="bg-surface border border-border rounded-lg p-4">
-            <h3 className="font-semibold text-foreground mb-2">How it works:</h3>
-            <ul className="text-sm text-muted-foreground space-y-1 text-left">
-              <li>• Speaks Telugu and get romanized text output</li>
-              <li>• Continuous listening until you stop</li>
-              <li>• Results appear in browser console (F12)</li>
-              <li>• Pauses in speech trigger transcription</li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   );

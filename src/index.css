@@ -144,25 +144,70 @@
     @apply scale-110;
   }
 
-  .pulse-rings {
-    @apply absolute inset-0 rounded-full;
-    @apply animate-ping;
-    @apply bg-gradient-to-br from-primary/30 to-accent/30;
+  .gemini-voice-animation {
+    @apply absolute inset-0 flex items-center justify-center;
+    pointer-events: none;
   }
 
-  .pulse-rings::before,
-  .pulse-rings::after {
-    @apply content-[''] absolute inset-0 rounded-full;
-    @apply bg-gradient-to-br from-primary/20 to-accent/20;
-    @apply animate-ping;
+  .voice-wave {
+    @apply absolute rounded-full border border-primary/20;
+    animation: voice-ripple 3s ease-out infinite;
   }
 
-  .pulse-rings::before {
+  .voice-wave:nth-child(1) {
+    width: 140px;
+    height: 140px;
+    animation-delay: 0s;
+  }
+
+  .voice-wave:nth-child(2) {
+    width: 180px;
+    height: 180px;
     animation-delay: 0.5s;
   }
 
-  .pulse-rings::after {
+  .voice-wave:nth-child(3) {
+    width: 220px;
+    height: 220px;
     animation-delay: 1s;
+  }
+
+  .voice-wave:nth-child(4) {
+    width: 260px;
+    height: 260px;
+    animation-delay: 1.5s;
+  }
+
+  .voice-wave:nth-child(5) {
+    width: 300px;
+    height: 300px;
+    animation-delay: 2s;
+  }
+
+  .voice-spectrum {
+    @apply absolute inset-0 flex items-center justify-center;
+  }
+
+  .spectrum-bar {
+    @apply bg-gradient-to-t from-primary to-accent rounded-full mx-0.5;
+    width: 3px;
+    animation: spectrum-bounce 1.5s ease-in-out infinite alternate;
+  }
+
+  .spectrum-bar:nth-child(1) { animation-delay: 0s; height: 20px; }
+  .spectrum-bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
+  .spectrum-bar:nth-child(3) { animation-delay: 0.2s; height: 45px; }
+  .spectrum-bar:nth-child(4) { animation-delay: 0.3s; height: 30px; }
+  .spectrum-bar:nth-child(5) { animation-delay: 0.4s; height: 50px; }
+  .spectrum-bar:nth-child(6) { animation-delay: 0.3s; height: 30px; }
+  .spectrum-bar:nth-child(7) { animation-delay: 0.2s; height: 45px; }
+  .spectrum-bar:nth-child(8) { animation-delay: 0.1s; height: 35px; }
+  .spectrum-bar:nth-child(9) { animation-delay: 0s; height: 20px; }
+
+  .breathing-glow {
+    @apply absolute inset-0 rounded-full;
+    background: radial-gradient(circle, hsl(var(--primary) / 0.1) 0%, transparent 70%);
+    animation: breathing-pulse 4s ease-in-out infinite;
   }
 
   .theme-toggle {
@@ -193,15 +238,42 @@
   }
 }
 
-@keyframes voice-pulse {
+@keyframes voice-ripple {
   0% {
-    box-shadow: 0 0 0 0 hsl(var(--voice-pulse) / 0.7);
+    transform: scale(0.8);
+    opacity: 1;
+    border-width: 2px;
   }
   50% {
-    box-shadow: 0 0 0 20px hsl(var(--voice-pulse) / 0);
+    opacity: 0.3;
+    border-width: 1px;
   }
   100% {
-    box-shadow: 0 0 0 0 hsl(var(--voice-pulse) / 0);
+    transform: scale(1.2);
+    opacity: 0;
+    border-width: 0px;
+  }
+}
+
+@keyframes spectrum-bounce {
+  0% {
+    transform: scaleY(0.3);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scaleY(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes breathing-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.1;
   }
 }
 
