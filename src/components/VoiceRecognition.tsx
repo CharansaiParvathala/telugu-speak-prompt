@@ -1,7 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Square } from "lucide-react";
 import MicrophoneIcon from "./MicrophoneIcon";
-import { useToast } from "@/hooks/use-toast";
 
 // Extend the Window interface for webkit speech recognition
 declare global {
@@ -15,7 +14,7 @@ const VoiceRecognition: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
-  const { toast } = useToast();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     // Check if speech recognition is supported
@@ -23,11 +22,7 @@ const VoiceRecognition: React.FC = () => {
     
     if (!SpeechRecognition) {
       setIsSupported(false);
-      toast({
-        title: "Speech Recognition Not Supported",
-        description: "Your browser doesn't support speech recognition. Please use Chrome, Edge, or Safari.",
-        variant: "destructive",
-      });
+      console.log("Speech Recognition not supported");
       return;
     }
 
@@ -59,6 +54,9 @@ const VoiceRecognition: React.FC = () => {
           // Log the final romanized Telugu transcription to console
           console.log("Telugu Transcription (Romanized):", finalTranscript.trim());
           
+          // Play audio response
+          playAudioResponse(finalTranscript.trim());
+          
           // Clear for next utterance
           finalTranscript = "";
         } else {
@@ -75,32 +73,6 @@ const VoiceRecognition: React.FC = () => {
 
     recognition.onerror = (event: any) => {
       console.error("Speech recognition error:", event.error);
-      
-      let errorMessage = "Speech recognition error occurred";
-      
-      switch (event.error) {
-        case "no-speech":
-          errorMessage = "No speech detected. Please try speaking clearly.";
-          break;
-        case "audio-capture":
-          errorMessage = "Audio capture failed. Please check your microphone.";
-          break;
-        case "not-allowed":
-          errorMessage = "Microphone access denied. Please allow microphone permissions.";
-          break;
-        case "network":
-          errorMessage = "Network error. Please check your internet connection.";
-          break;
-        default:
-          errorMessage = `Speech recognition error: ${event.error}`;
-      }
-      
-      toast({
-        title: "Recognition Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      
       setIsListening(false);
     };
 
@@ -116,26 +88,30 @@ const VoiceRecognition: React.FC = () => {
         recognitionRef.current.stop();
       }
     };
-  }, [toast]);
+  }, []);
+
+  const playAudioResponse = useCallback((transcript: string) => {
+    // Create audio element if it doesn't exist
+    if (!audioRef.current) {
+      audioRef.current = new Audio('/audio.ogg');
+    }
+    
+    // Play the response audio
+    audioRef.current.play().catch(error => {
+      console.log("Audio playback failed:", error);
+    });
+  }, []);
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current || !isSupported) return;
 
     try {
       recognitionRef.current.start();
-      toast({
-        title: "Listening Started",
-        description: "Speak in Telugu - the romanized text will appear in the console.",
-      });
+      console.log("Speech recognition started");
     } catch (error) {
       console.error("Error starting recognition:", error);
-      toast({
-        title: "Error",
-        description: "Failed to start speech recognition. Please try again.",
-        variant: "destructive",
-      });
     }
-  }, [isSupported, toast]);
+  }, [isSupported]);
 
   const stopListening = useCallback(() => {
     if (!recognitionRef.current) return;
@@ -143,15 +119,12 @@ const VoiceRecognition: React.FC = () => {
     try {
       recognitionRef.current.stop();
       setIsListening(false);
-      toast({
-        title: "Listening Stopped",
-        description: "Speech recognition has been stopped.",
-      });
+      console.log("Speech recognition stopped");
     } catch (error) {
       console.error("Error stopping recognition:", error);
       setIsListening(false);
     }
-  }, [toast]);
+  }, []);
 
   if (!isSupported) {
     return (
@@ -184,18 +157,18 @@ const VoiceRecognition: React.FC = () => {
 
         {/* Main microphone button with cosmic particle animation */}
         <div className="relative">
-          {/* Cosmic particle field */}
+          {/* Cosmic particle field - behind button */}
           {isListening && (
             <div className="cosmic-listening-field">
-              {/* Generate 40 floating particles */}
-              {Array.from({ length: 40 }).map((_, i) => (
+              {/* Generate 30 floating particles for better performance */}
+              {Array.from({ length: 30 }).map((_, i) => (
                 <div
                   key={i}
                   className="cosmic-particle"
                   style={{
-                    '--delay': `${i * 0.1}s`,
-                    '--rotation': `${i * 9}deg`,
-                    '--orbit-size': `${120 + (i % 5) * 40}px`,
+                    '--delay': `${i * 0.15}s`,
+                    '--rotation': `${i * 12}deg`,
+                    '--orbit-size': `${100 + (i % 4) * 30}px`,
                     '--z-depth': `${(i % 3) + 1}`,
                   } as React.CSSProperties}
                 />

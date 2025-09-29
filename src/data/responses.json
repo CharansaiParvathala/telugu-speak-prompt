@@ -1,0 +1,14 @@
+{
+  "responses": {
+    "hello": "audio.ogg",
+    "hi": "audio.ogg", 
+    "namaste": "audio.ogg",
+    "ela unnaru": "audio.ogg",
+    "bagunnara": "audio.ogg",
+    "meme": "audio.ogg",
+    "funny": "audio.ogg",
+    "joke": "audio.ogg",
+    "comedy": "audio.ogg",
+    "default": "audio.ogg"
+  }
+}

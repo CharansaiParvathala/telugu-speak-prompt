@@ -119,12 +119,13 @@
 /* Voice UI Animations */
 @layer components {
   .voice-button {
-    @apply relative flex items-center justify-center rounded-full transition-all duration-300 z-10;
+    @apply relative flex items-center justify-center rounded-full transition-all duration-300;
     @apply bg-gradient-to-br from-primary to-accent;
     @apply shadow-[0_8px_32px_hsl(var(--voice-glow))];
     @apply hover:scale-105 active:scale-95;
     width: var(--voice-size);
     height: var(--voice-size);
+    z-index: 20;
   }
 
   .voice-button.active {
@@ -145,11 +146,12 @@
   /* Cosmic Particle Animation System */
   .cosmic-listening-field {
     @apply absolute inset-0 pointer-events-none;
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 400px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    z-index: 0;
   }
 
   .cosmic-particle {
@@ -159,16 +161,14 @@
       hsl(270, 100%, 70%), 
       hsl(320, 100%, 70%)
     );
-    box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
-    animation: 
-      cosmic-orbit calc(8s + var(--delay)) linear infinite,
-      cosmic-pulse calc(2s + var(--delay)) ease-in-out infinite alternate,
-      cosmic-depth calc(4s + var(--delay)) ease-in-out infinite;
+    box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+    animation: cosmic-orbit calc(6s + var(--delay)) ease-in-out infinite;
     
     left: 50%;
     top: 50%;
     transform-origin: 0 0;
-    opacity: 0.8;
+    opacity: 0.7;
+    will-change: transform, opacity;
   }
 
   .cosmic-particle::before {
@@ -248,15 +248,22 @@
     @apply transition-all duration-200;
     @apply px-6 py-3 font-medium;
     @apply shadow-lg hover:shadow-xl;
+    z-index: 30;
   }
 }
 
 @keyframes cosmic-orbit {
   0% {
-    transform: rotate(var(--rotation)) translateX(var(--orbit-size)) rotate(calc(-1 * var(--rotation)));
+    transform: rotate(var(--rotation)) translateX(var(--orbit-size)) rotate(calc(-1 * var(--rotation))) scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: rotate(calc(var(--rotation) + 180deg)) translateX(var(--orbit-size)) rotate(calc(-1 * (var(--rotation) + 180deg))) scale(1);
+    opacity: 0.9;
   }
   100% {
-    transform: rotate(calc(var(--rotation) + 360deg)) translateX(var(--orbit-size)) rotate(calc(-1 * (var(--rotation) + 360deg)));
+    transform: rotate(calc(var(--rotation) + 360deg)) translateX(var(--orbit-size)) rotate(calc(-1 * (var(--rotation) + 360deg))) scale(0.8);
+    opacity: 0.5;
   }
 }
 
