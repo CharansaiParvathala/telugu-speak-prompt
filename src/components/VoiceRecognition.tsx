@@ -1,6 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Square } from "lucide-react";
 import MicrophoneIcon from "./MicrophoneIcon";
+import responsesData from "../data/responses.json";
+import { findMatchingResponse } from "../utils/teluguTransliterator";
 
 // Extend the Window interface for webkit speech recognition
 declare global {
@@ -91,9 +93,14 @@ const VoiceRecognition: React.FC = () => {
   }, []);
 
   const playAudioResponse = useCallback((transcript: string) => {
-    // Create audio element if it doesn't exist
+    // Find matching response using the transliterator
+    const audioFile = findMatchingResponse(transcript, responsesData.responses);
+    
+    // Create audio element with the correct file
     if (!audioRef.current) {
-      audioRef.current = new Audio('/audio.ogg');
+      audioRef.current = new Audio(`/${audioFile}`);
+    } else {
+      audioRef.current.src = `/${audioFile}`;
     }
     
     // Play the response audio
