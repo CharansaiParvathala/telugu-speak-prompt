@@ -68,9 +68,13 @@ const VoiceRecognition: React.FC = () => {
     };
 
     recognition.onspeechstart = () => {
-      // When new speech starts, clear any previous partial results
+      // When new speech starts, stop any playing audio and clear previous results
+      if (audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
       finalTranscript = "";
-      console.log("New speech detected - clearing previous transcript");
+      console.log("New speech detected - stopping audio and clearing transcript");
     };
 
     recognition.onerror = (event: any) => {
@@ -96,14 +100,17 @@ const VoiceRecognition: React.FC = () => {
     // Find matching response using the transliterator
     const audioFile = findMatchingResponse(transcript, responsesData.responses);
     
-    // Create audio element with the correct file
+    // Create audio element with the correct file and optimize for fast playback
     if (!audioRef.current) {
       audioRef.current = new Audio(`/${audioFile}`);
+      audioRef.current.preload = 'auto';
+      audioRef.current.playbackRate = 1.2; // Slightly faster playback
     } else {
       audioRef.current.src = `/${audioFile}`;
+      audioRef.current.currentTime = 0;
     }
     
-    // Play the response audio
+    // Play the response audio immediately
     audioRef.current.play().catch(error => {
       console.log("Audio playback failed:", error);
     });
