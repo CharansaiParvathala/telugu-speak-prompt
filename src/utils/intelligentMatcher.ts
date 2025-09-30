@@ -1,61 +1,54 @@
 import { transliterateTeluguToRoman } from "./teluguTransliterator";
+import keywordsData from "../data/keywords.json";
 
-// Keyword categories with weights for intelligent matching
-const keywordCategories = {
-  greeting: {
-    keywords: ["hello", "hi", "hey", "namaste", "namaskaram", "namskaram", "subhodayam", "vanakkam", "greetings"],
-    audioFile: "audio.ogg",
-    weight: 1.0
-  },
-  timeGreeting: {
-    keywords: ["morning", "evening", "night", "afternoon", "subhodayam", "sayantramu", "ratri"],
-    audioFile: "audio.ogg",
-    weight: 1.0
-  },
-  howAreYou: {
-    keywords: ["how", "ela", "ఎలా", "unnaru", "unnav", "bagunnara", "bagunnava", "bagunara", "bagunava"],
-    audioFile: "audio.ogg",
-    weight: 1.0
-  },
-  entertainment: {
-    keywords: ["meme", "funny", "joke", "comedy", "hasya", "haasya", "memes", "fun", "laugh"],
-    audioFile: "audio.ogg",
-    weight: 0.9
-  },
-  question: {
-    keywords: ["what", "when", "where", "why", "how", "ento", "emiti", "emitandi", "vishayam"],
-    audioFile: "audio.ogg",
-    weight: 0.8
-  }
+type KeywordCategory = {
+  keywords: string[];
+  audioFile: string;
+  weight: number;
 };
 
+type KeywordCategories = {
+  [key: string]: KeywordCategory;
+};
+
+const keywordCategories: KeywordCategories = keywordsData.categories;
+
 /**
- * Calculate similarity score between transcript and keywords
+ * Advanced similarity scoring with multiple strategies
  */
 function calculateScore(transcript: string, keywords: string[]): number {
-  const transcriptLower = transcript.toLowerCase();
+  const transcriptLower = transcript.toLowerCase().trim();
+  const words = transcriptLower.split(/\s+/);
   let score = 0;
   
   for (const keyword of keywords) {
     const keywordLower = keyword.toLowerCase();
     
-    // Exact match
+    // Strategy 1: Exact match
     if (transcriptLower === keywordLower) {
-      score += 3;
+      score += 5;
+      continue;
     }
-    // Contains whole word
-    else if (transcriptLower.includes(` ${keywordLower} `) || 
-             transcriptLower.startsWith(`${keywordLower} `) ||
-             transcriptLower.endsWith(` ${keywordLower}`)) {
-      score += 2;
+    
+    // Strategy 2: Word-level matching
+    for (const word of words) {
+      if (word === keywordLower) {
+        score += 3;
+      } else if (word.includes(keywordLower) || keywordLower.includes(word)) {
+        score += 2;
+      } else if (fuzzyMatch(word, keywordLower)) {
+        score += 1.5;
+      }
     }
-    // Partial match
-    else if (transcriptLower.includes(keywordLower)) {
+    
+    // Strategy 3: Contains keyword
+    if (transcriptLower.includes(keywordLower)) {
       score += 1;
     }
-    // Fuzzy match (for typos)
-    else if (fuzzyMatch(transcriptLower, keywordLower)) {
-      score += 0.5;
+    
+    // Strategy 4: Phonetic similarity
+    if (soundsLike(transcriptLower, keywordLower)) {
+      score += 1;
     }
   }
   
@@ -63,29 +56,89 @@ function calculateScore(transcript: string, keywords: string[]): number {
 }
 
 /**
- * Simple fuzzy matching for typos and variations
+ * Enhanced fuzzy matching with edit distance
  */
 function fuzzyMatch(str1: string, str2: string): boolean {
-  if (Math.abs(str1.length - str2.length) > 2) return false;
+  const maxLen = Math.max(str1.length, str2.length);
+  if (maxLen === 0) return true;
+  if (Math.abs(str1.length - str2.length) > 3) return false;
   
-  let matches = 0;
-  const minLength = Math.min(str1.length, str2.length);
+  // Calculate Levenshtein distance
+  const distance = levenshteinDistance(str1, str2);
+  const similarity = (maxLen - distance) / maxLen;
   
-  for (let i = 0; i < minLength; i++) {
-    if (str1[i] === str2[i]) matches++;
-  }
-  
-  return matches / minLength > 0.7;
+  return similarity > 0.65;
 }
 
 /**
- * Intelligent response matcher using keyword scoring
+ * Levenshtein distance for fuzzy matching
+ */
+function levenshteinDistance(str1: string, str2: string): number {
+  const m = str1.length;
+  const n = str2.length;
+  const dp: number[][] = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+  
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (str1[i - 1] === str2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,
+          dp[i][j - 1] + 1,
+          dp[i - 1][j - 1] + 1
+        );
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+/**
+ * Phonetic similarity check for different pronunciations
+ */
+function soundsLike(str1: string, str2: string): boolean {
+  // Remove vowels for consonant skeleton matching
+  const consonants1 = str1.replace(/[aeiou]/g, '');
+  const consonants2 = str2.replace(/[aeiou]/g, '');
+  
+  if (consonants1 === consonants2) return true;
+  
+  // Check if consonant patterns are similar
+  return fuzzyMatch(consonants1, consonants2);
+}
+
+/**
+ * Detect if input is likely a greeting based on patterns
+ */
+function isLikelyGreeting(transcript: string): boolean {
+  const greetingPatterns = [
+    /^(hi|hey|hello|hola|namaste|salam)/i,
+    /(good\s+(morning|evening|night|afternoon))/i,
+    /(how\s+(are|r)\s+you)/i,
+    /^\w{2,6}(\s+bro|\s+dude|\s+friend)?$/i, // Short words often greetings
+  ];
+  
+  return greetingPatterns.some(pattern => pattern.test(transcript.trim()));
+}
+
+/**
+ * Intelligent response matcher with fallback strategies
  */
 export function findIntelligentMatch(transcript: string): string {
   // Transliterate if Telugu script detected
   const normalizedTranscript = /[\u0C00-\u0C7F]/.test(transcript)
     ? transliterateTeluguToRoman(transcript)
     : transcript;
+  
+  // If transcript is too short (1-2 chars), default response
+  if (normalizedTranscript.trim().length <= 2) {
+    return "audio.ogg";
+  }
   
   let bestMatch = { category: "", score: 0, audioFile: "audio.ogg" };
   
@@ -100,6 +153,12 @@ export function findIntelligentMatch(transcript: string): string {
         audioFile: data.audioFile
       };
     }
+  }
+  
+  // Fallback: If no good match but looks like a greeting, use greeting response
+  if (bestMatch.score < 1 && isLikelyGreeting(normalizedTranscript)) {
+    console.log("Fallback: Detected as likely greeting");
+    return "audio.ogg";
   }
   
   // Return best match or default

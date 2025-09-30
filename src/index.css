@@ -145,9 +145,9 @@
 
   /* Smooth Particle Animation System */
   .cosmic-listening-field {
-    @apply absolute inset-0 pointer-events-none;
-    width: 300px;
-    height: 300px;
+    @apply absolute pointer-events-none;
+    width: 180px;
+    height: 180px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -156,18 +156,19 @@
 
   .cosmic-particle {
     @apply absolute rounded-full;
-    width: 3px;
-    height: 3px;
+    width: 2.5px;
+    height: 2.5px;
     background: hsl(var(--primary));
     box-shadow: 
-      0 0 4px hsl(var(--primary) / 0.6),
-      0 0 8px hsl(var(--primary) / 0.3);
-    animation: smooth-orbit 10s linear infinite;
+      0 0 3px hsl(var(--primary) / 0.7),
+      0 0 6px hsl(var(--primary) / 0.4);
+    animation: smooth-orbit 12s linear infinite;
     animation-delay: var(--delay, 0s);
     left: 50%;
     top: 50%;
-    opacity: 0.7;
-    filter: blur(0.5px);
+    opacity: 0.8;
+    filter: blur(0.3px);
+    will-change: transform;
   }
 
   .sound-ripples {
@@ -209,17 +210,17 @@
 
   .glow-ring {
     @apply absolute left-1/2 top-1/2 rounded-full;
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
     transform: translate(-50%, -50%);
     background: radial-gradient(circle, 
       transparent 40%, 
-      hsl(var(--primary) / 0.1) 50%,
-      hsl(var(--primary) / 0.2) 60%,
+      hsl(var(--primary) / 0.15) 50%,
+      hsl(var(--primary) / 0.25) 60%,
       transparent 70%
     );
     animation: glow-pulse 4s ease-in-out infinite;
-    filter: blur(15px);
+    filter: blur(12px);
   }
 
   .theme-toggle {

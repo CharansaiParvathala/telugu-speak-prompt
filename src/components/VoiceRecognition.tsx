@@ -171,7 +171,7 @@ const VoiceRecognition: React.FC = () => {
                   style={{
                     '--delay': `${i * 0.1}s`,
                     '--rotation': `${i * 4}deg`,
-                    '--orbit-size': `${80 + (i % 5) * 15}px`,
+                    '--orbit-size': `${60 + (i % 3) * 8}px`,
                   } as React.CSSProperties}
                 />
               ))}

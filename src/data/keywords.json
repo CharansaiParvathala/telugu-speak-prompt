@@ -1,0 +1,46 @@
+{
+  "categories": {
+    "greeting": {
+      "keywords": [
+        "hello", "hi", "hey", "namaste", "namaskaram", "namskaram", 
+        "subhodayam", "vanakkam", "greetings", "salam", "salaam", 
+        "malekum", "assalam", "shalom", "hola", "bonjour", "ciao",
+        "konnichiwa", "annyeong", "sawubona", "jambo", "aloha"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 1.0
+    },
+    "timeGreeting": {
+      "keywords": [
+        "morning", "evening", "night", "afternoon", "subhodayam", 
+        "sayantramu", "ratri", "good", "day"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 1.0
+    },
+    "howAreYou": {
+      "keywords": [
+        "how", "ela", "ఎలా", "unnaru", "unnav", "bagunnara", 
+        "bagunnava", "bagunara", "bagunava", "doing", "are", "you"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 1.0
+    },
+    "entertainment": {
+      "keywords": [
+        "meme", "funny", "joke", "comedy", "hasya", "haasya", 
+        "memes", "fun", "laugh", "humor", "entertainment"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 0.9
+    },
+    "question": {
+      "keywords": [
+        "what", "when", "where", "why", "how", "ento", "emiti", 
+        "emitandi", "vishayam", "who", "which"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 0.8
+    }
+  }
+}
