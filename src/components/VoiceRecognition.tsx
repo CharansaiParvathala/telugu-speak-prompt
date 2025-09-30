@@ -163,15 +163,15 @@ const VoiceRecognition: React.FC = () => {
           {/* Cosmic particle field - behind button */}
           {isListening && (
             <div className="cosmic-listening-field">
-              {/* Generate 60 particles for full circle coverage */}
-              {Array.from({ length: 60 }).map((_, i) => (
+              {/* Generate 90 particles for complete circle coverage */}
+              {Array.from({ length: 90 }).map((_, i) => (
                 <div
                   key={i}
                   className="cosmic-particle"
                   style={{
-                    '--delay': `${i * 0.05}s`,
-                    '--rotation': `${i * 6}deg`,
-                    '--orbit-size': `${100 + (i % 3) * 40}px`,
+                    '--delay': `${i * 0.1}s`,
+                    '--rotation': `${i * 4}deg`,
+                    '--orbit-size': `${80 + (i % 5) * 15}px`,
                   } as React.CSSProperties}
                 />
               ))}
@@ -184,8 +184,8 @@ const VoiceRecognition: React.FC = () => {
                 <div className="ripple"></div>
               </div>
               
-              {/* Central energy core */}
-              <div className="energy-core"></div>
+              {/* Glowing smoke ring */}
+              <div className="glow-ring"></div>
             </div>
           )}
           
