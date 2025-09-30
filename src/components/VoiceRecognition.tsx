@@ -1,8 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Square } from "lucide-react";
 import MicrophoneIcon from "./MicrophoneIcon";
-import responsesData from "../data/responses.json";
-import { findMatchingResponse } from "../utils/teluguTransliterator";
+import { findIntelligentMatch } from "../utils/intelligentMatcher";
+import { audioManager } from "../utils/audioManager";
 
 // Extend the Window interface for webkit speech recognition
 declare global {
@@ -16,7 +16,11 @@ const VoiceRecognition: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Preload all audio files for instant playback
+    audioManager.preloadAudio(["audio.ogg", "audio1.ogg"]);
+  }, []);
 
   useEffect(() => {
     // Check if speech recognition is supported
@@ -68,11 +72,8 @@ const VoiceRecognition: React.FC = () => {
     };
 
     recognition.onspeechstart = () => {
-      // When new speech starts, stop any playing audio and clear previous results
-      if (audioRef.current && !audioRef.current.paused) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+      // When new speech starts, stop any playing audio
+      audioManager.stop();
       finalTranscript = "";
       console.log("New speech detected - stopping audio and clearing transcript");
     };
@@ -97,23 +98,11 @@ const VoiceRecognition: React.FC = () => {
   }, []);
 
   const playAudioResponse = useCallback((transcript: string) => {
-    // Find matching response using the transliterator
-    const audioFile = findMatchingResponse(transcript, responsesData.responses);
+    // Use intelligent matcher to find best response
+    const audioFile = findIntelligentMatch(transcript);
     
-    // Create audio element with the correct file and optimize for fast playback
-    if (!audioRef.current) {
-      audioRef.current = new Audio(`/${audioFile}`);
-      audioRef.current.preload = 'auto';
-      audioRef.current.playbackRate = 1.2; // Slightly faster playback
-    } else {
-      audioRef.current.src = `/${audioFile}`;
-      audioRef.current.currentTime = 0;
-    }
-    
-    // Play the response audio immediately
-    audioRef.current.play().catch(error => {
-      console.log("Audio playback failed:", error);
-    });
+    // Play using preloaded audio manager for instant response
+    audioManager.play(audioFile, 1.5); // 1.5x speed for faster response
   }, []);
 
   const startListening = useCallback(() => {
