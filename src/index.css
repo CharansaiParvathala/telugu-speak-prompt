@@ -170,27 +170,36 @@
   }
 
   .ripple {
-    @apply absolute rounded-full border-2;
-    border-color: hsl(180, 100%, 70% / 0.3);
-    animation: sound-wave-ripple 2s ease-out infinite;
+    @apply absolute rounded-full border;
+    border-color: hsl(var(--primary) / 0.25);
+    animation: smooth-ripple 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .ripple:nth-child(1) {
-    width: 200px;
-    height: 200px;
+    width: 120px;
+    height: 120px;
     animation-delay: 0s;
   }
 
   .ripple:nth-child(2) {
-    width: 300px;
-    height: 300px;
-    animation-delay: 0.7s;
+    width: 120px;
+    height: 120px;
+    animation-delay: 0.75s;
   }
 
   .ripple:nth-child(3) {
-    width: 400px;
-    height: 400px;
-    animation-delay: 1.4s;
+    width: 120px;
+    height: 120px;
+    animation-delay: 1.5s;
+  }
+
+  .ripple:nth-child(4) {
+    width: 120px;
+    height: 120px;
+    animation-delay: 2.25s;
   }
 
   .energy-core {
@@ -246,18 +255,18 @@
   }
 }
 
-@keyframes sound-wave-ripple {
+@keyframes smooth-ripple {
   0% {
-    transform: scale(0.5);
-    opacity: 1;
-    border-width: 3px;
-  }
-  50% {
-    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.6;
     border-width: 2px;
   }
+  50% {
+    opacity: 0.3;
+    border-width: 1px;
+  }
   100% {
-    transform: scale(1.5);
+    transform: translate(-50%, -50%) scale(2.5);
     opacity: 0;
     border-width: 0px;
   }

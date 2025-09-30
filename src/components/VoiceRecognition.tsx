@@ -163,22 +163,22 @@ const VoiceRecognition: React.FC = () => {
           {/* Cosmic particle field - behind button */}
           {isListening && (
             <div className="cosmic-listening-field">
-              {/* Generate 30 floating particles for better performance */}
-              {Array.from({ length: 30 }).map((_, i) => (
+              {/* Generate 60 particles for full circle coverage */}
+              {Array.from({ length: 60 }).map((_, i) => (
                 <div
                   key={i}
                   className="cosmic-particle"
                   style={{
-                    '--delay': `${i * 0.15}s`,
-                    '--rotation': `${i * 12}deg`,
-                    '--orbit-size': `${100 + (i % 4) * 30}px`,
-                    '--z-depth': `${(i % 3) + 1}`,
+                    '--delay': `${i * 0.05}s`,
+                    '--rotation': `${i * 6}deg`,
+                    '--orbit-size': `${100 + (i % 3) * 40}px`,
                   } as React.CSSProperties}
                 />
               ))}
               
-              {/* Sound wave ripples */}
+              {/* Smooth sound wave ripples */}
               <div className="sound-ripples">
+                <div className="ripple"></div>
                 <div className="ripple"></div>
                 <div className="ripple"></div>
                 <div className="ripple"></div>
