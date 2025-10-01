@@ -2,62 +2,132 @@
   "categories": {
     "greeting": {
       "keywords": [
-        "hello", "hi", "hey", "namaste", "namaskaram", "namskaram", "namasthe",
-        "subhodayam", "vanakkam", "greetings", "salam", "salaam", 
-        "malekum", "assalam", "shalom", "hola", "bonjour", "ciao",
-        "konnichiwa", "annyeong", "sawubona", "jambo", "aloha", "bro", "guru", "friend"
+        "hello", "hi", "hey", "namaste", "namaskaram", "namskaram", "namasthe", "namaskar",
+        "subhodayam", "vanakkam", "greetings", "salam", "salaam", "aleikum", "walaikum",
+        "malekum", "assalam", "shalom", "hola", "bonjour", "ciao", "ola", "salut",
+        "konnichiwa", "annyeong", "sawubona", "jambo", "aloha", "bro", "guru", "friend",
+        "dude", "mate", "buddy", "anna", "akka", "thammudu", "cheluvu", "babu"
       ],
       "audioFile": "audio.ogg",
       "weight": 0.3
     },
     "timeGreeting": {
       "keywords": [
-        "morning", "evening", "night", "afternoon", "subhodayam", 
-        "sayantramu", "ratri", "good", "day"
+        "morning", "evening", "night", "afternoon", "subhodayam", "suprabhatam",
+        "sayantramu", "ratri", "madhyanam", "good", "day", "gudmorning", "gdevening", "gnight"
       ],
       "audioFile": "audio.ogg",
       "weight": 0.4
     },
     "howAreYou": {
       "keywords": [
-        "how", "ela", "ఎలా", "unnaru", "unnav", "vunnav", "unnava", "vunnava",
-        "bagunnara", "bagunnava", "bagunara", "bagunava", 
-        "doing", "are", "you", "manchi", "super"
+        "how", "ela", "ఎలా", "unnaru", "unnav", "vunnav", "unnava", "vunnava", "unavu",
+        "bagunnara", "bagunnava", "bagunara", "bagunava", "bagunava", "baagunava",
+        "doing", "are", "you", "manchi", "super", "nice", "fine", "manchiga", "baane",
+        "okay", "alright", "baundi", "feel", "feeling", "eppudu", "nuvvu", "meeru"
       ],
       "audioFile": "audio.ogg",
       "weight": 1.5
     },
     "jokeRequest": {
       "keywords": [
-        "joke", "meme", "funny", "comedy", "hasya", "haasya", 
-        "cheppu", "chepandi", "chepu", "cheppandi", "tell", "say",
-        "edaina", "edina", "entaina", "entina", "memes", "fun", "laugh", "humor"
+        "joke", "joku", "meme", "meem", "funny", "comedy", "hasya", "haasya", "navvu",
+        "cheppu", "chepandi", "chepu", "cheppandi", "chepava", "cheptava", "tell", "say",
+        "edaina", "edina", "entaina", "entina", "edhaina", "memes", "fun", "laugh", "humor",
+        "navvincchu", "navvinchu", "something", "konni", "oka", "okati", "funny"
       ],
       "audioFile": "audio1.ogg",
-      "weight": 3.0
+      "weight": 3.5
     },
     "actionRequest": {
       "keywords": [
-        "cheppu", "chepandi", "chepu", "cheppandi", "tell", "say", "show",
-        "edaina", "edina", "something", "entaina", "entina", "give"
+        "cheppu", "chepandi", "chepu", "cheppandi", "chepava", "cheptava", "tell", "say", "show",
+        "edaina", "edina", "something", "entaina", "entina", "edhaina", "give", "ivvu",
+        "oka", "okati", "konni", "konchem", "little", "bit", "some", "any"
       ],
       "audioFile": "audio1.ogg",
       "weight": 2.5
     },
+    "storyRequest": {
+      "keywords": [
+        "story", "katha", "kadha", "kathalu", "stories", "tale", "tales", "cheppu", "tell",
+        "oka", "okati", "something", "edaina", "interesting", "manchi"
+      ],
+      "audioFile": "audio1.ogg",
+      "weight": 3.2
+    },
+    "songRequest": {
+      "keywords": [
+        "song", "paata", "patalu", "music", "sangeetam", "ganam", "sing", "padu",
+        "cheppu", "play", "vinipinchu", "vinu", "listen", "oka", "edaina"
+      ],
+      "audioFile": "audio1.ogg",
+      "weight": 3.2
+    },
     "question": {
       "keywords": [
-        "what", "when", "where", "why", "how", "ento", "emiti", 
-        "emitandi", "vishayam", "who", "which", "edi", "em"
+        "what", "when", "where", "why", "how", "ento", "emiti", "emi", "entha",
+        "emitandi", "vishayam", "who", "which", "edi", "em", "evaru", "ekkada",
+        "eppudu", "ela", "enduku", "yela", "yevaru", "yekkada", "yeppudu"
       ],
       "audioFile": "audio.ogg",
       "weight": 1.2
     },
     "entertainment": {
       "keywords": [
-        "entertainment", "enjoy", "timepass", "bore", "boring"
+        "entertainment", "enjoy", "timepass", "bore", "boring", "boredga", "boaringa",
+        "manchi", "something", "edaina", "fun", "interesting", "maja", "kick"
       ],
       "audioFile": "audio1.ogg",
-      "weight": 1.8
+      "weight": 2.0
+    },
+    "help": {
+      "keywords": [
+        "help", "sahayam", "support", "cheppu", "cheppandi", "ela", "how",
+        "cheyali", "cheyyali", "do", "explain", "cheppava", "telugu", "ardham"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 2.8
+    },
+    "thanks": {
+      "keywords": [
+        "thanks", "thank", "dhanyavadalu", "dhanyavaadalu", "nandhi", "shukriya",
+        "appreciate", "grateful", "manchidi", "bagundi", "super", "awesome", "great"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 2.2
+    },
+    "bye": {
+      "keywords": [
+        "bye", "goodbye", "see", "later", "tarvatha", "kaldudam", "kalisedham",
+        "velthunna", "veltunna", "vellipothuna", "pothuna", "tata", "ciao", "adios"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 2.0
+    },
+    "news": {
+      "keywords": [
+        "news", "samacharam", "vishayalu", "latest", "update", "ento", "emundi",
+        "emiti", "what", "happening", "jarigindi", "jariginde", "new"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 2.5
+    },
+    "advice": {
+      "keywords": [
+        "advice", "suggest", "suggestion", "upayam", "salaha", "cheppu", "cheppandi",
+        "emicheyali", "ela", "how", "tips", "idea", "yochana"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 2.6
+    },
+    "food": {
+      "keywords": [
+        "food", "tiffin", "aahaaram", "tindam", "tinu", "hungry", "aakali", "bhakshanam",
+        "eat", "breakfast", "lunch", "dinner", "snack", "cheppu", "emundi", "edaina"
+      ],
+      "audioFile": "audio.ogg",
+      "weight": 2.3
     }
   }
 }
