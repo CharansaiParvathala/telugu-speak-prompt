@@ -1,4 +1,4 @@
-import { transliterateTeluguToRoman } from "./teluguTransliterator";
+import { transliterateTeluguToRoman, correctSpeechErrors } from "./teluguTransliterator";
 import keywordsData from "../data/keywords.json";
 
 type KeywordCategory = {
@@ -189,16 +189,20 @@ function removeNoiseWords(transcript: string): string {
  */
 export function findIntelligentMatch(transcript: string): string {
   // Transliterate if Telugu script detected
-  const normalizedTranscript = /[\u0C00-\u0C7F]/.test(transcript)
+  let normalizedTranscript = /[\u0C00-\u0C7F]/.test(transcript)
     ? transliterateTeluguToRoman(transcript)
     : transcript;
+  
+  // Apply speech error corrections
+  normalizedTranscript = correctSpeechErrors(normalizedTranscript);
   
   // If transcript is too short (1-2 chars), default response
   if (normalizedTranscript.trim().length <= 2) {
     return "audio.ogg";
   }
   
-  console.log("Processing:", normalizedTranscript);
+  console.log("Original:", transcript);
+  console.log("Corrected:", normalizedTranscript);
   
   // Remove noise words to focus on core intent
   const cleanedTranscript = removeNoiseWords(normalizedTranscript);

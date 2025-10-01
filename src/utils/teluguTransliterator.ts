@@ -37,7 +37,133 @@ const commonWordsMapping: { [key: string]: string } = {
   'జోక్': 'joke',
   'కామెడీ': 'comedy',
   'హాస్యం': 'hasya',
+  'ఎందుకు': 'enduku',
+  'చెప్పు': 'cheppu',
+  'చెప్పండి': 'cheppandi',
+  'ఏదైనా': 'edaina',
 };
+
+/**
+ * Common speech recognition errors and their corrections
+ * Maps common misrecognitions to correct Telugu words
+ */
+const speechCorrectionMap: { [key: string]: string } = {
+  // "enduku" (why) variations
+  "emdaukau": "enduku",
+  "emduku": "enduku", 
+  "emdhuku": "enduku",
+  "yenduku": "enduku",
+  "yemdhuku": "enduku",
+  "emdaku": "enduku",
+  
+  // "ela" (how) variations
+  "yela": "ela",
+  "ila": "ela",
+  "elaa": "ela",
+  
+  // "unnav" (are you) variations
+  "vunnav": "unnav",
+  "unnavu": "unnav",
+  "vunnavu": "unnav",
+  "unav": "unnav",
+  "unavu": "unnav",
+  
+  // "cheppu" (tell) variations
+  "chepavu": "cheppu",
+  "cheppavu": "cheppu",
+  "chepu": "cheppu",
+  "sheppu": "cheppu",
+  "cheppandi": "cheppu",
+  
+  // "edaina" (something) variations
+  "eidaina": "edaina",
+  "edhaina": "edaina",
+  "yadaina": "edaina",
+  "yedaina": "edaina",
+  "edina": "edaina",
+  
+  // "bagunnava" (are you good) variations
+  "bagunnav": "bagunnava",
+  "baagunnava": "bagunnava",
+  "bhagunnava": "bagunnava",
+  "bagunava": "bagunnava",
+  "baagunava": "bagunnava",
+  
+  // "namaste" variations
+  "namasthe": "namaste",
+  "namaskaram": "namaste",
+  "namskaram": "namaste",
+  "namaskar": "namaste",
+  
+  // Common words
+  "joku": "joke",
+  "jokeu": "joke",
+  "memu": "meme",
+  "meem": "meme",
+  "helo": "hello",
+  "halo": "hello",
+};
+
+/**
+ * Simple Levenshtein distance for correction matching
+ */
+function calculateLevenshtein(str1: string, str2: string): number {
+  const m = str1.length;
+  const n = str2.length;
+  const dp: number[][] = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+  
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (str1[i - 1] === str2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,
+          dp[i][j - 1] + 1,
+          dp[i - 1][j - 1] + 1
+        );
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+/**
+ * Apply speech recognition corrections to handle common misrecognitions
+ */
+export function correctSpeechErrors(text: string): string {
+  let corrected = text.toLowerCase().trim();
+  
+  // Apply word-level corrections
+  const words = corrected.split(/\s+/);
+  const correctedWords = words.map(word => {
+    // Check exact matches first
+    if (speechCorrectionMap[word]) {
+      console.log(`Correcting: ${word} -> ${speechCorrectionMap[word]}`);
+      return speechCorrectionMap[word];
+    }
+    
+    // Check for partial matches with high similarity
+    for (const [error, correction] of Object.entries(speechCorrectionMap)) {
+      if (word.length >= 4 && error.length >= 4) {
+        // Levenshtein distance check for close matches
+        const distance = calculateLevenshtein(word, error);
+        if (distance <= 2) {
+          console.log(`Fuzzy correcting: ${word} -> ${correction} (distance: ${distance})`);
+          return correction;
+        }
+      }
+    }
+    
+    return word;
+  });
+  
+  return correctedWords.join(" ");
+}
 
 export function transliterateTeluguToRoman(text: string): string {
   // First try exact word mapping
