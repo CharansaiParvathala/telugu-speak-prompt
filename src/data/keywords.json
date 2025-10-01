@@ -2,13 +2,13 @@
   "categories": {
     "greeting": {
       "keywords": [
-        "hello", "hi", "hey", "namaste", "namaskaram", "namskaram", 
+        "hello", "hi", "hey", "namaste", "namaskaram", "namskaram", "namasthe",
         "subhodayam", "vanakkam", "greetings", "salam", "salaam", 
         "malekum", "assalam", "shalom", "hola", "bonjour", "ciao",
-        "konnichiwa", "annyeong", "sawubona", "jambo", "aloha"
+        "konnichiwa", "annyeong", "sawubona", "jambo", "aloha", "bro", "guru", "friend"
       ],
       "audioFile": "audio.ogg",
-      "weight": 1.0
+      "weight": 0.3
     },
     "timeGreeting": {
       "keywords": [
@@ -16,31 +16,48 @@
         "sayantramu", "ratri", "good", "day"
       ],
       "audioFile": "audio.ogg",
-      "weight": 1.0
+      "weight": 0.4
     },
     "howAreYou": {
       "keywords": [
-        "how", "ela", "ఎలా", "unnaru", "unnav", "bagunnara", 
-        "bagunnava", "bagunara", "bagunava", "doing", "are", "you"
+        "how", "ela", "ఎలా", "unnaru", "unnav", "vunnav", "unnava", "vunnava",
+        "bagunnara", "bagunnava", "bagunara", "bagunava", 
+        "doing", "are", "you", "manchi", "super"
       ],
       "audioFile": "audio.ogg",
-      "weight": 1.0
+      "weight": 1.5
     },
-    "entertainment": {
+    "jokeRequest": {
       "keywords": [
-        "meme", "funny", "joke", "comedy", "hasya", "haasya", 
-        "memes", "fun", "laugh", "humor", "entertainment"
+        "joke", "meme", "funny", "comedy", "hasya", "haasya", 
+        "cheppu", "chepandi", "chepu", "cheppandi", "tell", "say",
+        "edaina", "edina", "entaina", "entina", "memes", "fun", "laugh", "humor"
       ],
-      "audioFile": "audio.ogg",
-      "weight": 0.9
+      "audioFile": "audio1.ogg",
+      "weight": 3.0
+    },
+    "actionRequest": {
+      "keywords": [
+        "cheppu", "chepandi", "chepu", "cheppandi", "tell", "say", "show",
+        "edaina", "edina", "something", "entaina", "entina", "give"
+      ],
+      "audioFile": "audio1.ogg",
+      "weight": 2.5
     },
     "question": {
       "keywords": [
         "what", "when", "where", "why", "how", "ento", "emiti", 
-        "emitandi", "vishayam", "who", "which"
+        "emitandi", "vishayam", "who", "which", "edi", "em"
       ],
       "audioFile": "audio.ogg",
-      "weight": 0.8
+      "weight": 1.2
+    },
+    "entertainment": {
+      "keywords": [
+        "entertainment", "enjoy", "timepass", "bore", "boring"
+      ],
+      "audioFile": "audio1.ogg",
+      "weight": 1.8
     }
   }
 }

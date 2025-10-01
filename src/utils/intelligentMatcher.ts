@@ -127,7 +127,7 @@ function isLikelyGreeting(transcript: string): boolean {
 }
 
 /**
- * Intelligent response matcher with fallback strategies
+ * Intelligent response matcher with multi-intent priority system
  */
 export function findIntelligentMatch(transcript: string): string {
   // Transliterate if Telugu script detected
@@ -140,27 +140,43 @@ export function findIntelligentMatch(transcript: string): string {
     return "audio.ogg";
   }
   
-  let bestMatch = { category: "", score: 0, audioFile: "audio.ogg" };
+  console.log("Processing:", normalizedTranscript);
   
-  // Score each category
+  // Score all categories and collect matches
+  const categoryScores: Array<{ category: string; score: number; audioFile: string; weight: number }> = [];
+  
   for (const [category, data] of Object.entries(keywordCategories)) {
-    const score = calculateScore(normalizedTranscript, data.keywords) * data.weight;
-    
-    if (score > bestMatch.score) {
-      bestMatch = {
+    const score = calculateScore(normalizedTranscript, data.keywords);
+    if (score > 0) {
+      categoryScores.push({
         category,
-        score,
-        audioFile: data.audioFile
-      };
+        score: score * data.weight,
+        audioFile: data.audioFile,
+        weight: data.weight
+      });
     }
   }
   
+  // Sort by weighted score (highest priority first)
+  categoryScores.sort((a, b) => b.score - a.score);
+  
+  // Log detected intents
+  if (categoryScores.length > 0) {
+    console.log("Detected intents:", categoryScores.map(c => `${c.category} (${c.score.toFixed(2)})`).join(", "));
+  }
+  
+  // Return highest priority match
+  if (categoryScores.length > 0) {
+    console.log(`Selected: ${categoryScores[0].category} -> ${categoryScores[0].audioFile}`);
+    return categoryScores[0].audioFile;
+  }
+  
   // Fallback: If no good match but looks like a greeting, use greeting response
-  if (bestMatch.score < 1 && isLikelyGreeting(normalizedTranscript)) {
+  if (isLikelyGreeting(normalizedTranscript)) {
     console.log("Fallback: Detected as likely greeting");
     return "audio.ogg";
   }
   
-  // Return best match or default
-  return bestMatch.score > 0 ? bestMatch.audioFile : "audio.ogg";
+  // Default response
+  return "audio.ogg";
 }
