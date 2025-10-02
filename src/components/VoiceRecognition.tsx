@@ -219,13 +219,6 @@ const VoiceRecognition: React.FC = () => {
           </button>
         </div>
 
-        {/* Status indicator */}
-        {isProcessing && (
-          <div className="mt-8 text-sm text-muted-foreground animate-pulse">
-            Processing with AI...
-          </div>
-        )}
-        
         {/* Stop button (only visible when recording) */}
         {isListening && (
           <button
