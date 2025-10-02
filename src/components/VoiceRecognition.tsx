@@ -1,8 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Square } from "lucide-react";
 import MicrophoneIcon from "./MicrophoneIcon";
-import { findIntelligentMatch } from "../utils/intelligentMatcher";
+import { findGeminiMatch } from "../utils/geminiMatcher";
 import { audioManager } from "../utils/audioManager";
+import { useToast } from "./ui/use-toast";
 
 // Extend the Window interface for webkit speech recognition
 declare global {
@@ -15,7 +16,9 @@ declare global {
 const VoiceRecognition: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Preload all audio files for instant playback
@@ -97,13 +100,33 @@ const VoiceRecognition: React.FC = () => {
     };
   }, []);
 
-  const playAudioResponse = useCallback((transcript: string) => {
-    // Use intelligent matcher to find best response
-    const audioFile = findIntelligentMatch(transcript);
-    
-    // Play using preloaded audio manager for instant response
-    audioManager.play(audioFile, 1.5); // 1.5x speed for faster response
-  }, []);
+  const playAudioResponse = useCallback(async (transcript: string) => {
+    try {
+      setIsProcessing(true);
+      
+      // Use Gemini AI to find best audio response
+      const audioFile = await findGeminiMatch(transcript);
+      
+      console.log("Playing audio response:", audioFile);
+      
+      // Play using preloaded audio manager for instant response
+      audioManager.play(audioFile, 1.5); // 1.5x speed for faster response
+      
+    } catch (error) {
+      console.error("Error getting audio response:", error);
+      
+      toast({
+        title: "Response Error",
+        description: "Failed to process your message. Using default response.",
+        variant: "destructive",
+      });
+      
+      // Fallback to default audio
+      audioManager.play("audio.ogg", 1.5);
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [toast]);
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current || !isSupported) return;
@@ -196,6 +219,13 @@ const VoiceRecognition: React.FC = () => {
           </button>
         </div>
 
+        {/* Status indicator */}
+        {isProcessing && (
+          <div className="mt-8 text-sm text-muted-foreground animate-pulse">
+            Processing with AI...
+          </div>
+        )}
+        
         {/* Stop button (only visible when recording) */}
         {isListening && (
           <button
