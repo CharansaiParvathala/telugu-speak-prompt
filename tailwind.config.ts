@@ -95,6 +95,16 @@ export default {
             backgroundPosition: "200% 0",
           },
         },
+        "slide-in-up": {
+          "0%": {
+            transform: "translateY(100%)",
+            opacity: "0",
+          },
+          "100%": {
+            transform: "translateY(0)",
+            opacity: "1",
+          },
+        },
         "accordion-down": {
           from: {
             height: "0",
@@ -116,6 +126,7 @@ export default {
         "voice-pulse": "voice-pulse 2s infinite",
         "gentle-bounce": "gentle-bounce 3s ease-in-out infinite",
         "shimmer": "shimmer 2s infinite",
+        "slide-in-up": "slide-in-up 0.3s ease-out",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
